@@ -9,8 +9,7 @@ namespace Cliente
 {
     public partial class FrmValidador : Form
     {
-        private TcpClient remoto;
-        private NetworkStream flujo;
+        private Protocolo.Protocolo protocolo;
 
         public FrmValidador()
         {
@@ -21,20 +20,14 @@ namespace Cliente
         {
             try
             {
-                remoto = new TcpClient("127.0.0.1", 8080);
-                flujo = remoto.GetStream();
+                protocolo = new Protocolo.Protocolo("127.0.0.1", 8080);
             }
             catch (SocketException ex)
             {
                 MessageBox.Show("No se puedo establecer conexión " + ex.Message,
                     "ERROR");
             }
-            finally 
-            {
-                flujo?.Close();
-                remoto?.Close();
-            }
-
+    
             panPlaca.Enabled = false;
             chkLunes.Enabled = false;
             chkMartes.Enabled = false;
@@ -62,7 +55,7 @@ namespace Cliente
                 Parametros = new[] { usuario, contraseña }
             };
             
-            Respuesta respuesta = HazOperacion(pedido);
+            Respuesta respuesta = protocolo.ResolverPedido(pedido);
             if (respuesta == null)
             {
                 MessageBox.Show("Hubo un error", "ERROR");
@@ -86,47 +79,7 @@ namespace Cliente
             }
         }
 
-        private Respuesta HazOperacion(Pedido pedido)
-        {
-            if(flujo == null)
-            {
-                MessageBox.Show("No hay conexión", "ERROR");
-                return null;
-            }
-            try
-            {
-                byte[] bufferTx = Encoding.UTF8.GetBytes(
-                    pedido.Comando + " " + string.Join(" ", pedido.Parametros));
-                
-                flujo.Write(bufferTx, 0, bufferTx.Length);
-
-                byte[] bufferRx = new byte[1024];
-                
-                int bytesRx = flujo.Read(bufferRx, 0, bufferRx.Length);
-                
-                string mensaje = Encoding.UTF8.GetString(bufferRx, 0, bytesRx);
-                
-                var partes = mensaje.Split(' ');
-                
-                return new Respuesta
-                {
-                    Estado = partes[0],
-                    Mensaje = string.Join(" ", partes.Skip(1).ToArray())
-                };
-            }
-            catch (SocketException ex)
-            {
-                MessageBox.Show("Error al intentar transmitir " + ex.Message,
-                    "ERROR");
-            }
-            finally 
-            {
-                flujo?.Close();
-                remoto?.Close();
-            }
-            return null;
-        }
-
+        
         private void btnConsultar_Click(object sender, EventArgs e)
         {
             string modelo = txtModelo.Text;
@@ -139,7 +92,7 @@ namespace Cliente
                 Parametros = new[] { modelo, marca, placa }
             };
             
-            Respuesta respuesta = HazOperacion(pedido);
+            Respuesta respuesta = protocolo.ResolverPedido(pedido);
             if (respuesta == null)
             {
                 MessageBox.Show("Hubo un error", "ERROR");
@@ -219,7 +172,7 @@ namespace Cliente
                 Parametros = new[] { mensaje }
             };
 
-            Respuesta respuesta = HazOperacion(pedido);
+            Respuesta respuesta = protocolo.ResolverPedido(pedido);
             if (respuesta == null)
             {
                 MessageBox.Show("Hubo un error", "ERROR");
@@ -241,11 +194,7 @@ namespace Cliente
 
         private void FrmValidador_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (flujo != null)
-                flujo.Close();
-            if (remoto != null)
-                if (remoto.Connected)
-                    remoto.Close();
+            protocolo.CerrarConexion();
         }
     }
 }
