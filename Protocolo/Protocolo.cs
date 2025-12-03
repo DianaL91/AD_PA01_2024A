@@ -1,4 +1,44 @@
-﻿using System;
+﻿// **************************
+// Práctica 07
+// Diana Rodriguez 
+// Fecha de realización: 26/11/2025
+// Fecha de entrega: 03/12/2025
+// Resultados:
+//   * Se utilizó GitHub para la gestión de versiones del proyecto,
+//     aplicando comandos básicos como clone, commit, push y pull.
+//   * Se clonó el repositorio desde GitHub utilizando la URL proporcionada,
+//     asegurando que el proyecto local estuviera sincronizado con la versión
+//     remota. Una vez clonado, se realizaron modificaciones en el código
+//     existentes para mejorar la estructura y legibilidad:
+//       - Se añadieron comentarios explicativos en las clases y métodos,
+//         describiendo su propósito y funcionamiento.
+//   * Se modificó el proyecto para incorporar una nueva clase Protocolo,
+//     la cual centraliza la lógica de comunicación entre cliente y servidor,
+//     haciendo uso de las clases Pedido y Respuesta.
+//   * Se actualizaron las clases Cliente y Servidor para que los métodos
+//     HazOperación y ResolverPedido sean implementados en la clase Protocolo,
+//     eliminando la dependencia directa de Pedido y Respuesta.
+// Conclusiones:
+//   * GitHub es una herramienta fundamental para la gestión de versiones,
+//     permitiendo mantener un historial claro de cambios y facilitar la
+//     colaboración en equipo.
+//   * La integración de la clase Protocolo mejoró la modularidad y la
+//     organización del código, centralizando la lógica del protocolo.
+//   * El uso de Visual Studio junto con GitHub simplifica el flujo de trabajo
+//     para proyectos en equipo.
+//   * Resolver problemas en clases existentes refuerza la importancia de
+//     pruebas y revisiones continuas durante el desarrollo.
+// Recomendaciones:
+//   * Mantener una estructura clara en los commits, utilizando mensajes
+//     descriptivos para facilitar el seguimiento de cambios.
+//   * Implementar pruebas unitarias para validar el correcto funcionamiento
+//     de la clase Protocolo y sus métodos.
+//   * Considerar la creación de ramas (branches) para nuevas funcionalidades,
+//     evitando afectar la rama principal durante el desarrollo.
+//   * Explorar herramientas de integración continua (CI) para automatizar
+//     compilación y pruebas en futuros proyectos.
+// **************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
